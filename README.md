@@ -37,6 +37,250 @@
 
   <h2 id="soal1">Soal1</h2>
 
+Dalam soal ini program diminta untuk membuat 3 fitur, yaitu filter, combine, dan decode.
+
+## a. Download
+
+Dalam soal ini program diminta untuk mendownload secara otomatis ketika membuka file. Untuk kodenya seperti ini
+```
+void download()
+{
+    if (!opendir("Clues.zip"))
+    {
+        pid_t pid_download = fork();
+        if (pid_download == 0)
+        {
+            char *download = "wget -q 'https://drive.usercontent.google.com/download?id=1xFn1OBJUuSdnApDseEczKhtNzyGekauK&export=download&authuser=0' -O Clues.zip";
+            char *argv_download[] = {"sh", "-c", download, NULL};
+            execv("/bin/sh", argv_download);
+            
+            char *unzip = "sudo unzip -q Clues.zip";
+            char *argv_unzip[] = {"sh", "-c", unzip, NULL};
+            execv("/bin/sh", argv_unzip);
+
+            char *rm = "rm Clues.zip";
+            char *argv_rm[] = {"sh", "-c", rm, NULL};
+            execv("/bin/sh", argv_rm);
+        }
+        else if (pid_download > 0) wait(NULL);
+        else perror("fork");
+    }
+    printf("Usage: ./action -m [Filter|Combine|Decode]\n");
+
+}
+```
+dengan step sebagai berikut.
+- Program membuat proses fork(), lalu menjalankan proses di dalamnya.
+- Download dilakukan dengan variabel ```*download```.
+- Setelah itu, dillakukan unzip dengan variabel ```*unzip``` ke folder ```unzip```.
+- Remove file dilakukan setelah unzip dengan variabel ```*rm```.
+- Ketiga proses tersebut dilakukan dengan proses ```execv()```.
+- fungsi if ```(pid_download == 0)``` dilakukan jika proses child.
+- ```else if (pid_download > 0)``` digunakan jika proses parent
+- untuk ```else``` akan muncul pesan error.
+
+## b. Filter
+Untuk proses ini, isi folder ```"Clues/Clue%c"``` akan di-filter file yang berformat satu huruf dan satu angka ke folder ```Filtered```. 
+
+Sebelum itu, kita perlu check jika nama file mempunyai 5 karakter, dan karakter pertama bernilai huruf atau angka. Untuk kodenya seperti ini (untuk format: ```%c.txt``` dengan ```%c``` sebagai nama file).
+
+```
+int check_filter(const char *name) {
+    return strlen(name) == 5 && (isalpha(name[0]) || isdigit(name[0]));
+}
+```
+
+Untuk kodenya seperti ini
+
+```
+void filter()
+{
+    
+    mkdir("Filtered", 0755);
+    DIR *d;
+    struct dirent *dir;
+    char path[256];
+    
+    for (int i = 0; i < 4; i++)
+    {
+        sprintf(path, "Clues/Clue%c", 'A'+i);
+        d = opendir(path);
+        if (d) {
+            while ((dir = readdir(d)) != NULL) {
+                if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0) continue;
+
+                // inisialisasi full path dari semua folder Clues
+                char full_path[512];
+                sprintf(full_path, "%s/%s", path, dir->d_name);
+
+                if (check_filter(dir->d_name)) {
+                    // Move yang sudah difilter ke folder /Filtered
+                    pid_t pid = fork();
+                    if (pid == 0) {
+                        char *argv[] = {"mv", full_path, "Filtered/", NULL};
+                        execv("/bin/mv", argv);
+                        perror("mv failed");
+                        exit(EXIT_FAILURE);
+                    } else wait(NULL);
+                } else {
+                    // hapus file yang tidak terfilter
+                    pid_t pid = fork();
+                    if (pid == 0) {
+                        char *argv[] = {"rm", "-f", full_path, NULL};
+                        execv("/bin/rm", argv);
+                        perror("rm failed");
+                        exit(EXIT_FAILURE);
+                    } else wait(NULL);
+                }
+            }
+            closedir(d);
+        }
+    }
+}
+```
+
+## c. Combine
+Pada fungsi ini, program akan menggabungkan file yang sudah ada di folder ```Filtered``` jadi satu dalam file ```.txt```. Untuk kodenya seperti ini.
+
+```
+void combine()
+{
+    FILE *output = fopen("Combined.txt", "w");
+
+
+    for (int i = 1; i <= 26; i++)
+    {
+        // file angka
+        char file_angka[256];
+        sprintf(file_angka, "Filtered/%d.txt", i);
+
+        FILE *file = fopen(file_angka, "r");
+        if (file)
+        {
+            char c;
+            if (fscanf(file, " %c", &c) == 1)
+            {
+            fprintf(output, "%c", c);
+            }
+            fclose(file);
+        }   
+        // file huruf
+        char file_huruf[256];
+        // check file yang dimaksud kosong atau tidak
+        if (i <= 26) 
+        {
+            sprintf(file_huruf, "Filtered/%c.txt", 'a'+ i - 1);
+        }
+        else
+        {
+            file_huruf[0] = '\0';
+        }
+        fopen(file_huruf, "r");
+        if (file)
+        {
+            char c;
+            if (fscanf(file, "%c", &c) == 1)
+            {
+            fprintf(output, "%c", c);
+            }
+            fclose(file);
+        }  
+    }
+
+    fclose(output);
+}
+```
+
+Untuk prosesnya seperti ini.
+
+- Fungsi akan membuat file berupa ```Combined.txt```
+- Setelah itu, for loop digunakan untuk membuka file satu angka dan satu huruf.
+- Lalu, setiap isi file tersebut akan di-copy ke dalam file ```Combined.txt```.
+
+## d. Decode
+Pada fungsi ini, dilakukan decode dengan metode ```R0T13```, yaitu melakukan shifting sebanyak 13 karakter. Sebelum fungsi ```decode()``` dilakuan, dibuatlah fungsi ```ROT13()```. Untuk kodenya seperti ini.
+
+```
+void ROT13(char *rot)
+{
+    for (; *rot; rot++)
+    {
+        if (isalpha(*rot))
+        {
+            *rot = (toupper(*rot) <= 'M') ? *rot + 13 : *rot - 13;
+        }
+    }
+}
+```
+
+Setelah itu, dibuatlah fungsi ```decode()```. Untuk kodenya seperti ini
+
+```
+void decode()
+{
+    // membuka file Decoding.txt
+    FILE *combine = fopen("Combined.txt", "r");
+    if (!combine) return;
+
+    // Copy isinya ke rot
+    char rot[256];
+    fscanf(combine, "%s", rot);
+    fclose(combine);
+
+    // Melakukan encoding ROT13
+    ROT13(rot);
+
+    // Salin hasil ROT13 ke Decoded.txt
+    FILE *output = fopen("Decoded.txt", "w");
+    fprintf(output, "%s", rot);
+    fclose(output);
+
+
+}
+```
+
+Langkahnya cukup singkat. Langkahnya:
+
+- Fungsi membuka file ```Combine.txt```.
+- Setelah itu, dilakukan ROT13 dan hasilnya dimasukkan ke file ```Decoded.txt```.
+## e. int main()
+
+Untuk kodenya sebagai berikut.
+
+```
+int main(int argc, char *argv[])
+{
+    if (argc != 3 || strcmp(argv[1], "-m"))
+    {
+        download();
+        return 1;
+
+    }
+
+    if (!strcmp(argv[2], "Filter")) filter();
+    else if (!strcmp(argv[2], "Combine")) combine();
+    else if (!strcmp(argv[2], "Decode")) decode();
+    else 
+    {
+        printf("%s not found. \n\nUsage: %s -m [Filter|Combine|Decode]\n", argv[2], argv[0]);
+    };
+}
+```
+
+Untuk cara menggunakan kode ini yaitu
+- Jika user memasukkan command ```./action```, maka program akan mendowload secara otomatis.
+
+- Jika user memasukkan command ```./action -m Filter``` maka program akan menjalankan fungsi ```filter()```.
+
+- Jika user memasukkan command ```./action -m Combine``` maka program akan menjalankan fungsi ```combine()```.
+
+- Jika user memasukkan command ```./action -m Decode``` maka program akan menjalankan fungsi ```decode()```.
+
+- Jika user salah memasukkan command, program akan muncul 
+```
+printf("%s not found. \n\nUsage: %s -m [Filter|Combine Decode]\n", argv[2], argv[0]);
+```
+
   <h2 id="soal2">Soal2</h2>
 
   <h2 id="soal3">Soal3</h2>
