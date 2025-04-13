@@ -39,7 +39,7 @@
 
 Dalam soal ini program diminta untuk membuat 3 fitur, yaitu filter, combine, dan decode.
 
-## a. Download
+### a. Download
 
 Dalam soal ini program diminta untuk mendownload secara otomatis ketika membuka file. Untuk kodenya seperti ini
 ```
@@ -79,7 +79,7 @@ dengan step sebagai berikut.
 - ```else if (pid_download > 0)``` digunakan jika proses parent
 - untuk ```else``` akan muncul pesan error.
 
-## b. Filter
+### b. Filter
 Untuk proses ini, isi folder ```"Clues/Clue%c"``` akan di-filter file yang berformat satu huruf dan satu angka ke folder ```Filtered```. 
 
 Sebelum itu, kita perlu check jika nama file mempunyai 5 karakter, dan karakter pertama bernilai huruf atau angka. Untuk kodenya seperti ini (untuk format: ```%c.txt``` dengan ```%c``` sebagai nama file).
@@ -139,7 +139,7 @@ void filter()
 }
 ```
 
-## c. Combine
+### c. Combine
 Pada fungsi ini, program akan menggabungkan file yang sudah ada di folder ```Filtered``` jadi satu dalam file ```.txt```. Untuk kodenya seperti ini.
 
 ```
@@ -197,7 +197,7 @@ Untuk prosesnya seperti ini.
 - Setelah itu, for loop digunakan untuk membuka file satu angka dan satu huruf.
 - Lalu, setiap isi file tersebut akan di-copy ke dalam file ```Combined.txt```.
 
-## d. Decode
+### d. Decode
 Pada fungsi ini, dilakukan decode dengan metode ```R0T13```, yaitu melakukan shifting sebanyak 13 karakter. Sebelum fungsi ```decode()``` dilakuan, dibuatlah fungsi ```ROT13()```. Untuk kodenya seperti ini.
 
 ```
@@ -243,7 +243,8 @@ Langkahnya cukup singkat. Langkahnya:
 
 - Fungsi membuka file ```Combine.txt```.
 - Setelah itu, dilakukan ROT13 dan hasilnya dimasukkan ke file ```Decoded.txt```.
-## e. int main()
+  
+### e. int main()
 
 Untuk kodenya sebagai berikut.
 
