@@ -81,7 +81,7 @@ dengan step sebagai berikut.
 
 Untuk outputnya seperti ini
 
-https://github.com/user-attachments/assets/7b45e6fd-ee1b-4afa-b353-844fcbe782a1
+![Image](https://github.com/user-attachments/assets/9ae2886b-322e-4ca4-aa30-e1699c637048)
 
 ### b. Filter
 Untuk proses ini, isi folder ```"Clues/Clue%c"``` akan di-filter file yang berformat satu huruf dan satu angka ke folder ```Filtered```. 
@@ -143,6 +143,10 @@ void filter()
 }
 ```
 
+Untuk outputnya seperti ini
+
+![Image](https://github.com/user-attachments/assets/44ab2560-d28c-422a-8c58-e264acd97601)
+
 ### c. Combine
 Pada fungsi ini, program akan menggabungkan file yang sudah ada di folder ```Filtered``` jadi satu dalam file ```.txt```. Untuk kodenya seperti ini.
 
@@ -201,6 +205,10 @@ Untuk prosesnya seperti ini.
 - Setelah itu, for loop digunakan untuk membuka file satu angka dan satu huruf.
 - Lalu, setiap isi file tersebut akan di-copy ke dalam file ```Combined.txt```.
 
+Untuk outputnya seperti ini
+
+![Image](https://github.com/user-attachments/assets/cae57435-5af3-4f24-80c4-7bb83be519be)
+
 ### d. Decode
 Pada fungsi ini, dilakukan decode dengan metode ```R0T13```, yaitu melakukan shifting sebanyak 13 karakter. Sebelum fungsi ```decode()``` dilakuan, dibuatlah fungsi ```ROT13()```. Untuk kodenya seperti ini.
 
@@ -242,6 +250,10 @@ void decode()
 
 }
 ```
+
+Untuk outputnya seperti ini
+
+![Image](https://github.com/user-attachments/assets/80037c8c-0bd3-4fa6-ab4d-b15510bc7f00)
 
 Langkahnya cukup singkat. Langkahnya:
 
@@ -304,7 +316,7 @@ printf("%s not found. \n\nUsage: %s -m [Filter|Combine Decode]\n", argv[2], argv
 
 <h3>4A.</h3>
 
-```c
+```
 void list_processes(const char *username) {
     DIR *proc = opendir("/proc");
     if (!proc) {
