@@ -79,6 +79,10 @@ dengan step sebagai berikut.
 - ```else if (pid_download > 0)``` digunakan jika proses parent
 - untuk ```else``` akan muncul pesan error.
 
+Untuk outputnya seperti ini
+
+https://github.com/user-attachments/assets/7b45e6fd-ee1b-4afa-b353-844fcbe782a1
+
 ### b. Filter
 Untuk proses ini, isi folder ```"Clues/Clue%c"``` akan di-filter file yang berformat satu huruf dan satu angka ke folder ```Filtered```. 
 
