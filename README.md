@@ -520,11 +520,88 @@ Penjelasan:
 - Jika ```home``` tidak ada, maka ```home``` dideklarasikan dengan ```home = "/"```.
 - Jika ```home``` ada, maka fungsi menjalankan fungsi tertentu.
 
-### e. Anak Fitur Ketiga
-Untuk anak fitur ketiga (bernama rodok.exe), diperluakn beberapa fungsi, yaitu:
-1) Fungsi ```generate_hash(char *hash)`
-   Fungsi ini digunakan untuk generate hash 
-     
+### e. Anak Fitur Ketiga (Untuk soal no 3e dan 3f)
+Untuk anak fitur ketiga (bernama rodok.exe), diperlukan beberapa fungsi, yaitu:
+1) Fungsi ```generate_hash(char *hash)```
+   
+   Fungsi ini digunakan untuk generate hash secara random. Untuk kode nya seperti ini
+   
+   ```
+   void generate_hash(char *hash) {
+      const char hex_chars[] = "0123456789abcdef";
+      for (int i = 0; i < HASH_LENGTH; i++) {
+          hash[i] = hex_chars[rand() % 16];
+      }
+      hash[HASH_LENGTH] = '\0';
+    }
+   ```
+   Dimana cara kerjanya yaitu fungsi mengambil input, lalu menggunakan for loop hingga panjang hash (```HASH_LENGTH```).
+
+2) Fungsi ```miner_process(int id)```
+
+   Pada soal diminta untuk membuat hash secara random dalam rentang waktu 3 - 30 detik. Untuk jumlah mine-crafter kita batasi sebanyak 4 mine-crafter. Untuk kode has sebagai berikut.
+
+   ```
+   void miner_process(int id) {
+     char hash[HASH_LENGTH + 1];
+     srand(time(NULL) ^ (getpid()<<16));
+
+     while (1) {
+         int wait_time = 3 + rand() % 28;
+         sleep(wait_time);
+         generate_hash(hash);
+         write_log(id, hash);
+     }
+   }
+   ```
+
+   Cara kerjanya:
+   - Fungsi akan mengambil data berupa id
+   - Setelah itu, fungsi akan random menggunakan ```srand(time(NULL) ^ (getpid()<<16));``` untuk menghindari semua proses punya hasil rand() yang sama.
+   - Fungi while True diperlukan agar program jalan secara terus menerus.
+   - ```int wait_time = 3 + rand() % 16``` adalah waktu tunggu dengan rentang 3 - 30 detik.
+   - Fungsi akan generate hash dengan fungsi ```generate_hash()```.
+   - Setelah itu, dilakukan penulisan log dengan fungsi ```write_log()```.
+  
+### f. ```/tmp/.miner.log```
+
+Mula-mula, kita memerlukan beberapa fungsi.
+1) Fungsi ```write_log()```
+   Fungsi ini bertujuan untuk membuat file baru di direktori ```/tmp```. Untuk kodenya seperti ini
+
+   ```
+   void write_log(int id, const char *hash) {
+     FILE *f = fopen("/tmp/.miner.log", "a");
+     if (f) {
+         time_t now = time(NULL);
+         struct tm *t = localtime(&now);
+         char timebuf[64];
+         strftime(timebuf, sizeof(timebuf), "%F %T", t);
+         fprintf(f, "[%s][Miner %d] %s\n", timebuf, id, hash);
+         fclose(f);
+     }
+   }
+   ```
+
+  Untuk cara kerjanya seperti ini/
+  - Fungsi akan membuka file secara append (tidak mengubah data sebelumnya)
+  - Mengambil beberapa informasi yang diperlukan, seperti tanggal, waktu, id, dan hash.
+  - Setelah itu, ```fprintf``` digunakan untuk mencetak log sesuai kebutuhan.
+  - Program di-close menggunakan ```flclose(f)```.
+
+### g) ```int main()```
+
+Karena fungsi pertama dan kedua berjalan secara berulang, untuk menjalankan fungsi anak ketiga diperlukan kode sebagai berikut.
+
+```
+if (strstr(argv[0], "mine-crafter-") != NULL) {
+    int miner_id = atoi(argv[0] + strlen("mine-crafter-"));
+    prctl(PR_SET_NAME, argv[0]);
+    miner_process(miner_id);
+    exit(0);
+}
+```
+Dimana 
   <h2 id="soal4">Soal4</h2>
 
 <p>
