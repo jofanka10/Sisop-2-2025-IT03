@@ -519,6 +519,11 @@ Penjelasan:
 - Setelah itu, ```*home``` akan mengambil data yaitu ```getenv("HOME")```.
 - Jika ```home``` tidak ada, maka ```home``` dideklarasikan dengan ```home = "/"```.
 - Jika ```home``` ada, maka fungsi menjalankan fungsi tertentu.
+
+### e. Anak Fitur Ketiga
+Untuk anak fitur ketiga (bernama rodok.exe), diperluakn beberapa fungsi, yaitu:
+1) Fungsi ```generate_hash(char *hash)`
+   Fungsi ini digunakan untuk generate hash 
      
   <h2 id="soal4">Soal4</h2>
 
