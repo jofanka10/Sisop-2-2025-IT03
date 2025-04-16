@@ -413,6 +413,7 @@ void scan_and_encrypt(const char *dirpath) {
   Anak fitur kedua bernama trojan.wrm. Caranya sama seperti anak fitur pertama, yaitu menggunakan fungsi. Untuk soal ini, diperlukan dua fungsi.
   1) Fungsi ```copy_file(const char *source, const char *dest)```
      Untuk kodenya seperti ini
+     
      ```
      void copy_file(const char *source, const char *dest) {
        FILE *src = fopen(source, "rb");
@@ -434,12 +435,13 @@ void scan_and_encrypt(const char *dirpath) {
       fclose(dst);
     }
     ```
-    Penjelasan:
-    - Fungsi akan memanggil variabel pointer berupa source dan fest.
-    - Source akan dibuka dengan masing-masing dalamm mode read-back dan write-back.
-    - Keduanya dilakukan pengecekan, jiak tidak ada maka ```return```.
-    - Setelah itu, dilakukan copy file ke destinasi yang dituju.
-    - Lalu, source dan dst di-close.
+    
+  Penjelasan:
+  - Fungsi akan memanggil variabel pointer berupa source dan fest.
+  - Source akan dibuka dengan masing-masing dalamm mode read-back dan write-back.
+  - Keduanya dilakukan pengecekan, jiak tidak ada maka ```return```.
+  - Setelah itu, dilakukan copy file ke destinasi yang dituju.
+  - Lalu, source dan dst di-close.
 
 
   <h2 id="soal4">Soal4</h2>
