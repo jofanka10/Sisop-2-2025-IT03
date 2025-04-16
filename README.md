@@ -402,7 +402,7 @@ void scan_and_encrypt(const char *dirpath) {
      - Jika enskripsi selesai, dilakukan penulisan file .enc ke ```fwrite(buffer, 1, bytesRead, fp_out);```.
      - Jika proses selesai, ```fp```, ```fp_out``` akan diclose dengan ```fclose()``` dan ```filepath``` akan diremove.
     
-  2) ```scan_and_encrypt(const char *dirpath)```
+  2) Fungsi ```scan_and_encrypt(const char *dirpath)```
      - Pertama-tama, fungsi mengambil input berupa file path
      - Dicek apakah file tersebut ada, jika tidak ada maka ```return```.
      - Lalu dilakukan pengecekan, jika nama file adalah ```.``` atau ```..```, maka fungsi akan ```continue```.
@@ -410,7 +410,37 @@ void scan_and_encrypt(const char *dirpath) {
      - Dilakukan pengecekan bahwa ```full_path``` merupakan direktori atau bukan. Jika merupakan directory, maka fungsi akan memanggil dirinya sendiri (fungsi rekursif). Sedangkan, jika bukan maka file akan dienskripsi.
 
   ### c. Anak Fitur Kedua
-  Anak fitur kedua 
+  Anak fitur kedua bernama trojan.wrm. Caranya sama seperti anak fitur pertama, yaitu menggunakan fungsi. Untuk soal ini, diperlukan dua fungsi.
+  1) Fungsi ```copy_file(const char *source, const char *dest)```
+     Untuk kodenya seperti ini
+     ```
+     void copy_file(const char *source, const char *dest) {
+       FILE *src = fopen(source, "rb");
+       if (!src) return;
+  
+       FILE *dst = fopen(dest, "wb");
+       if (!dst) {
+           fclose(src);
+           return;
+       }
+  
+       char buffer[BUFFER_SIZE];
+       size_t bytes;
+       while ((bytes = fread(buffer, 1, sizeof(buffer), src)) > 0) {
+           fwrite(buffer, 1, bytes, dst);
+       }
+  
+      fclose(src);
+      fclose(dst);
+    }
+    ```
+    Penjelasan:
+    - Fungsi akan memanggil variabel pointer berupa source dan fest.
+    - Source akan dibuka dengan masing-masing dalamm mode read-back dan write-back.
+    - Keduanya dilakukan pengecekan, jiak tidak ada maka ```return```.
+    - Setelah itu, dilakukan copy file ke destinasi yang dituju.
+    - Lalu, source dan dst di-close.
+
 
   <h2 id="soal4">Soal4</h2>
 
