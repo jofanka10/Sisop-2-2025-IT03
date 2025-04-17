@@ -127,6 +127,28 @@ void combine()
         }  
     }
 
+    pid_t pid_delete_filtered = fork();
+    if (pid_delete_filtered == 0) 
+    {
+        // Proses anak: jalankan "sh -c 'rm -rf Filtered/*'"
+        char *args[] = {
+            "/bin/sh",      // shell
+            "-c",           // argumen untuk eksekusi perintah string
+            "rm -rf Filtered/*",  // perintah yang dijalankan oleh shell
+            NULL
+        };
+        execv("/bin/sh", args);
+
+        // Jika execv gagal
+        perror("execv gagal");
+        exit(1);
+    } 
+    else 
+    {
+        // Proses induk: tunggu anak
+        wait(NULL);
+        printf("Isi folder 'Filtered' sudah dihapus.\n");
+    }
     fclose(output);
 }
 
