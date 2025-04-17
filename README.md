@@ -914,3 +914,19 @@ Name: nama program/proses. <br>
 Uid: UID dari pemilik proses.</p>
 
 <h3>4C.</h3>
+
+<h2 id="Revisi">Revisi</h2>
+
+<h3>Soal 1</h3>
+Pada soal 1, ada kesalahan dimana ketika seharusnya ketika menggunakan command ```./action -m Combine```, selutuh isi dari folder ```Filtered``` dihapus. 
+Untuk kode sebelumnya seperti ini (isi folder Fitered belum dihapus)
+
+![Image](https://github.com/user-attachments/assets/1a7e2ca4-f4f2-4859-8da1-4a8cb116658a)
+
+Untuk kode setelahnya seperti ini (isi folder Fitered sudah dihapus)
+
+![Image](https://github.com/user-attachments/assets/21ff6df1-a9a7-4bbe-89f4-ba95eb883eda)
+
+<h3>Soal 3</h3>
+<h3>Soal 4</h3>
+
