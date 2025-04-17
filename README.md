@@ -601,7 +601,96 @@ if (strstr(argv[0], "mine-crafter-") != NULL) {
     exit(0);
 }
 ```
-Dimana 
+Dimana fungsi akan mengganti nama proses menjadi mine-crafer-xx.
+
+Selanjutnya, pada soal diminta untuk mengubah nama proses menjadi ```init```. Untuk kodenya seperti ini
+
+```
+    strcpy(__progname, "init");
+    prctl(PR_SET_NAME, __progname);
+```
+Dimana ```__progname``` merupakan pemanggilan dari ```extern char *__progname;```.
+
+Setelah itu, kita akan menjalankan ```rodok.exe```. Untuk kodenya seperti ini
+
+```
+    pid_t pid_rodok = fork();
+    if (pid_rodok == 0) {
+        strcpy(__progname, "rodok.exe");
+        prctl(PR_SET_NAME, __progname);
+
+        // signal(SIGINT, handle_sigint);
+
+        for (int i = 0; i < NUM_MINERS; i++) {
+            pid_t pid = fork();
+            if (pid == 0) {
+                char exe_path[MAX_PATH];
+                ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
+                if (len == -1) exit(EXIT_FAILURE);
+                exe_path[len] = '\0';
+
+                char proc_name[64];
+                snprintf(proc_name, sizeof(proc_name), "mine-crafter-%d", i);
+
+                char *new_argv[] = {proc_name, NULL};
+                execv(exe_path, new_argv);
+                perror("execv failed");
+                exit(EXIT_FAILURE);
+            } else if (pid > 0) {
+                miner_pids[i] = pid;
+            } else {
+                perror("fork");
+            }
+        }
+
+        pause();
+        exit(0);
+    }
+```
+Dimana prosesnya sebagai berikut.
+- Program akan membaut proses ```pid_t```.
+- Mengubah nama proses menjadi ```"rodok.exe"```.
+- Fungsi for loop digunakan untuk membuat
+
+
+Selanjutnya, fungsi anak fitur pertama dan kedua dijalankan. Untuk kodenya seperti ini
+
+```
+    pid_t pid_wannacryptor = fork();
+    if (pid_wannacryptor == 0) {
+        strcpy(__progname, "wannacryptor");
+        prctl(PR_SET_NAME, __progname);
+
+        // signal(SIGINT, handle_sigint);
+        if (is_directory(TARGET_DIR)) {
+            wannacryptor_repeat();
+        }
+
+        exit(0);
+    }
+    // menjalankan trojan.wrm
+    pid_t pid_trojan = fork();
+    if (pid_trojan == 0) {
+        strcpy(__progname, "trojan.wrm");
+        prctl(PR_SET_NAME, __progname);
+
+        // signal(SIGINT, handle_sigint);
+
+        trojan_repeat();
+        exit(0);
+    }
+
+    while (1) {
+        sleep(30);
+    }
+```
+Dimana proses berjalannya sebagai berikut.
+- Program membuat ```pid_t``` untuk membuat proses.
+- Nama proses diubah menjadi nama yang diinginkan.
+- Fungsi akan dipanggil untuk menjalankan proses.
+- Setelah itu, program exit dengan ```exit 0```.
+- Fungsi while diperlukan agar proses dapat berjalan secara daemon.
+
   <h2 id="soal4">Soal4</h2>
 
 <p>
