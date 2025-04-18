@@ -520,6 +520,10 @@ Penjelasan:
 - Jika ```home``` tidak ada, maka ```home``` dideklarasikan dengan ```home = "/"```.
 - Jika ```home``` ada, maka fungsi menjalankan fungsi tertentu.
 
+Untuk outputnya seperti ini
+
+![Image](https://github.com/user-attachments/assets/926d70fc-7d46-4131-90e3-c2fe1f7fb0cc)
+
 ### e. Anak Fitur Ketiga (Untuk soal no 3e dan 3f)
 Untuk anak fitur ketiga (bernama rodok.exe), diperlukan beberapa fungsi, yaitu:
 1) Fungsi ```generate_hash(char *hash)```
@@ -588,6 +592,10 @@ Mula-mula, kita memerlukan beberapa fungsi.
   - Mengambil beberapa informasi yang diperlukan, seperti tanggal, waktu, id, dan hash.
   - Setelah itu, ```fprintf``` digunakan untuk mencetak log sesuai kebutuhan.
   - Program di-close menggunakan ```flclose(f)```.
+
+  Untuk outputnya seperti ini
+
+  ![Image](https://github.com/user-attachments/assets/9529b564-5241-4d2a-88cb-247c4e42115d)
 
 ### g) ```int main()```
 
