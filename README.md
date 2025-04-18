@@ -929,5 +929,18 @@ Untuk kode setelahnya seperti ini (isi folder Fitered sudah dihapus)
 ![Image](https://github.com/user-attachments/assets/21ff6df1-a9a7-4bbe-89f4-ba95eb883eda)
 
 <h3>Soal 3</h3>
+Untuk soal 3, ada masalah dimana seharusnya ketika program dijalankan, maka terminal langsung ke shell input. Namun, kesalahan terjadi ketika program dijalankan, maka terminal belum menutup (tidak langsung ke shell input). Cara mengatasinya adalah dengan menghilangkan kode di bawah ini
+
+```
+    while (1) {
+        // menjaga agar parent tidak exit, supaya anak-anaknya tidak jadi defunct
+        sleep(30);
+    }
+```
+
+Untuk tampilannya seperti ini
+
+https://github.com/user-attachments/assets/1e5e91ea-ab00-4c87-a189-bb79a5a42ecb
+
 <h3>Soal 4</h3>
 
