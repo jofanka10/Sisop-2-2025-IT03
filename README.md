@@ -1123,6 +1123,22 @@ Dimana proses berjalannya sebagai berikut.
 - Setelah itu, program exit dengan ```exit 0```.
 - Fungsi while diperlukan agar proses dapat berjalan secara daemon.
 
+### h) Output
+
+Untuk output dari anak fitur kedua seperti ini
+(direktori ```/home/```)
+![Image](https://github.com/user-attachments/assets/8948c0ad-6b89-40af-aeb2-d512e266f122)
+
+(direktori ```/home/public/```)
+![Image](https://github.com/user-attachments/assets/74cc2719-212a-42d5-b077-5673493489e2)
+
+Lalu untuk output ```miner.log``` seperti ini
+![Image](https://github.com/user-attachments/assets/8ce410b7-263e-4491-bde8-b2775a72d4d2)
+
+Lalu output dari ```ps axjf``` seperti ini
+
+![Image](https://github.com/user-attachments/assets/5fe04b45-bed8-4f2e-b63d-af3f387c2d98)
+
   <h2 id="soal4">Soal4</h2>
 
 <p>
