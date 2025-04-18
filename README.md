@@ -1081,4 +1081,8 @@ Untuk tampilannya seperti ini
 https://github.com/user-attachments/assets/1e5e91ea-ab00-4c87-a189-bb79a5a42ecb
 
 <h3>Soal 4</h3>
-Untuk soal 4, ada satu revisi yaitu format 
+Untuk soal 4, ada satu revisi yaitu format log yang belum sesuai.
+
+![Image](https://github.com/user-attachments/assets/813607e5-3061-4cd2-914f-1b2defda5a13)
+
+ini adalah hasil format yang telah diperbarui dan di sesuaikan.
