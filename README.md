@@ -1553,7 +1553,6 @@ void encrypt_file(const char *filepath) {
         fwrite(buffer, 1, bytesRead, fp_out);
         offset += bytesRead;
     }
-void encrypt_file(const char *filepath) {
 ```
 Untuk outputnya seperti ini
 
