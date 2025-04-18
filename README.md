@@ -1088,6 +1088,42 @@ Untuk tampilannya seperti ini
 
 https://github.com/user-attachments/assets/1e5e91ea-ab00-4c87-a189-bb79a5a42ecb
 
+Selanjutnya, ada keasalahan pada enskripsi. Hal ini dapat diatasi dengan mengganti kode yang sebelumnya seperti ini
+
+```
+void encrypt_file(const char *filepath) {
+    ...
+    unsigned char buffer[BUFFER_SIZE];
+    size_t bytesRead;
+    while ((bytesRead = fread(buffer, 1, BUFFER_SIZE, fp)) > 0) {
+        for (size_t i = 0; i < bytesRead; i++) {
+            buffer[i] ^= (unsigned char)(xor_key & 0xFF);
+        }
+        fwrite(buffer, 1, bytesRead, fp_out);
+    }
+    ...
+}
+```
+Menjadi seperti ini
+```
+void encrypt_file(const char *filepath) {
+    while ((bytesRead = fread(buffer, 1, BUFFER_SIZE, fp)) > 0) {
+        for (size_t i = 0; i < bytesRead; i++) {
+            buffer[i] ^= KEY;
+        }
+        fwrite(buffer, 1, bytesRead, fp_out);
+        offset += bytesRead;
+    }
+void encrypt_file(const char *filepath) {
+```
+Untuk outputnya seperti ini
+
+Sebelum
+![Image](https://github.com/user-attachments/assets/348f8772-3fbf-440a-9ed7-bfc53c4eac0d)
+
+Sesudah
+![Image](https://github.com/user-attachments/assets/b19fb018-4f88-4457-ba89-c4fec2d8724b)
+
 <h3>Soal 4</h3>
 Untuk soal 4, ada satu revisi yaitu format log yang belum sesuai.
 
