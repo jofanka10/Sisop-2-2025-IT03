@@ -583,7 +583,7 @@ Mula-mula, kita memerlukan beberapa fungsi.
    }
    ```
 
-  Untuk cara kerjanya seperti ini/
+  Untuk cara kerjanya seperti ini
   - Fungsi akan membuka file secara append (tidak mengubah data sebelumnya)
   - Mengambil beberapa informasi yang diperlukan, seperti tanggal, waktu, id, dan hash.
   - Setelah itu, ```fprintf``` digunakan untuk mencetak log sesuai kebutuhan.
@@ -601,7 +601,7 @@ if (strstr(argv[0], "mine-crafter-") != NULL) {
     exit(0);
 }
 ```
-Dimana fungsi akan mengganti nama proses menjadi mine-crafer-xx.
+Dimana fungsi akan mengganti nama proses menjadi mine-crafer-xx di ps output.
 
 Selanjutnya, pada soal diminta untuk mengubah nama proses menjadi ```init```. Untuk kodenya seperti ini
 
@@ -650,7 +650,8 @@ Setelah itu, kita akan menjalankan ```rodok.exe```. Untuk kodenya seperti ini
 Dimana prosesnya sebagai berikut.
 - Program akan membaut proses ```pid_t```.
 - Mengubah nama proses menjadi ```"rodok.exe"```.
-- Fungsi for loop digunakan untuk membuat
+- Fungsi for loop digunakan untuk membuat 4 kali fork.
+- Setelah fork dibuat, maka nama proses diubah menjadi ```mine-crafer-%d```, dengan ```%d``` adalah angka dari 0 sampai 3.
 
 
 Selanjutnya, fungsi anak fitur pertama dan kedua dijalankan. Untuk kodenya seperti ini
