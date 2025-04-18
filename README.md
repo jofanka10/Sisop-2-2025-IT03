@@ -916,8 +916,146 @@ Uid: UID dari pemilik proses.</p>
 
 <h3>4C.</h3>
 
+<p>Pada soal ini kita membuat sebuah fitur untuk menghentikan proses log yang sedang berjalan pada komputer dengan cara mematikan daemonnya</p>
+
+```c
+void stop_daemon() {
+    FILE *f = fopen(PID_FILE, "r");
+    if (!f) {
+        printf("No daemon is running.\n");
+        return;
+    }
+    int pid;
+    fscanf(f, "%d", &pid);
+    fclose(f);
+    kill(pid, SIGTERM);
+    unlink(PID_FILE);
+    printf("Daemon stopped.\n");
+}
+```
+<p> Mendefinisikan fungsi bernama stop_daemon yang tidak menerima parameter dan tidak mengembalikan nilai (void).
+Fungsi ini bertugas menghentikan proses daemon yang sedang berjalan.
+</p>
+<p>
+  Membuka file yang menyimpan PID (Process ID) dari proses daemon.
+PID_FILE adalah macro atau konstanta yang menunjuk ke nama file tempat menyimpan PID, misalnya "daemon.pid".
+Dibuka dengan mode "r" artinya read only — hanya untuk membaca file.
+</p>
+
+<p>
+  fscanf(f, "%d", &pid); membaca integer dari file (PID proses daemon) dan menyimpannya ke variabel pid.
+fclose(f); menutup file setelah selesai dibaca.
+</p>
+
+<p>
+  Mengirim sinyal SIGTERM ke proses dengan ID pid.
+  Menghapus file PID_FILE dari sistem file.
+Ini untuk menandakan bahwa daemon sudah dihentikan dan tidak ada proses yang berjalan.
+</p>
+
+<h3>4D</h3>
+<p>
+  pada soal ini kami membuat fitur untuk menggagalkan semua proses yang sedang berjalan di suatu user  lalu akan ada status FAILED di file log saat fitur ini berjalan.
+</p>
+
+```c
+void fail_user(const char *username) {
+    uid_t uid = get_uid(username);
+    FILE *flag = fopen(FAIL_FLAG, "w");
+    if (flag) fclose(flag);
+
+    DIR *proc = opendir("/proc");
+    if (!proc) return;
+
+    struct dirent *entry;
+    while ((entry = readdir(proc)) != NULL) {
+        if (!isdigit(entry->d_name[0])) continue;
+
+        char path[256], name[100] = "";
+        uid_t proc_uid = -1;
+        snprintf(path, sizeof(path), "/proc/%s/status", entry->d_name);
+
+        FILE *fp = fopen(path, "r");
+        if (!fp) continue;
+
+        char line[256];
+        while (fgets(line, sizeof(line), fp)) {
+            if (strncmp(line, "Name:", 5) == 0)
+                sscanf(line, "Name:\t%99s", name);
+            if (strncmp(line, "Uid:", 4) == 0) {
+                sscanf(line, "Uid:\t%d", &proc_uid);
+                break;
+            }
+        }
+        fclose(fp);
+
+        if (proc_uid == uid) {
+            int pid = atoi(entry->d_name);
+            kill(pid, SIGKILL);
+            write_log(name, "FAILED");
+        }
+    }
+
+    closedir(proc);
+    printf("All processes of %s terminated.\n", username);
+}
+```
+
+Fungsi ini bertugas:
+Memberi tanda kegagalan (flag) pada sistem,
+Mematikan semua proses milik user tertentu (username),
+Mencatat proses yang dihentikan.
+
+cara kerjanya adalah:
+1.Ambil UID dari username. <br>
+2.Buat file tanda kegagalan (FAIL_FLAG).<br>
+3.Scan seluruh proses yang berjalan lewat /proc.<br>
+4.Buka /proc/[PID]/status, ambil UID dan nama proses.<br>
+5.Jika proses milik user tersebut → kirim sinyal SIGKILL, catat dalam log.<br>
+6.Ulangi sampai semua proses user tersebut dimatikan.<br>
+7.Tutup /proc dan cetak ringkasan.<br>
 <h2 id="Revisi">Revisi</h2>
 
+<h3>4E</h3>
+
+Pada soal kali ini kami membuat fitur untuk mengembalikan keadaan laptop seperti awal (mematikan fitur 4D), agar semua proses dapat kembali running dengan lancar.
+
+```c
+void revert_user(const char *username) {
+    unlink(FAIL_FLAG);
+    printf("User %s can run processes again.\n", username);
+}
+```
+<P>
+  unlink() adalah fungsi untuk menghapus file dari filesystem (mirip remove()).
+</P>
+
+<p>
+  Jika sebelumnya fail_user(username):
+<br>
+Membuat file FAIL_FLAG,
+<br>
+Mematikan semua proses user,
+<br>
+Menandai status user sebagai gagal.
+<br>
+Maka revert_user(username):
+<br>
+Menghapus flag kegagalan,
+<br>
+Memberi kesempatan user untuk aktif kembali.
+</p>
+
+<h3> 4F </h3>
+Pada soal ini kami membuat file log untuk semua aktifitas yang berjalan dan juga log ini berjalan.
+
+dan format nya adalah [dd:mm:yyyy]-[hh:mm:ss]_nama-process_STATUS(RUNNING/FAILED).
+
+
+
+
+
+<h2>REVISI</h2>
 <h3>Soal 1</h3>
 Pada soal 1, ada kesalahan dimana ketika seharusnya ketika menggunakan command ```./action -m Combine```, selutuh isi dari folder ```Filtered``` dihapus. 
 Untuk kode sebelumnya seperti ini (isi folder Fitered belum dihapus)
