@@ -1052,7 +1052,7 @@ Pada soal ini kami membuat file log untuk semua aktifitas yang berjalan dan juga
 dan format nya adalah [dd:mm:yyyy]-[hh:mm:ss]_nama-process_STATUS(RUNNING/FAILED).
 
 
-
+![Image](https://github.com/user-attachments/assets/8aa1c931-e44c-494b-857c-8725ba1dd495)
 
 
 <h2>REVISI</h2>
@@ -1081,4 +1081,4 @@ Untuk tampilannya seperti ini
 https://github.com/user-attachments/assets/1e5e91ea-ab00-4c87-a189-bb79a5a42ecb
 
 <h3>Soal 4</h3>
-
+Untuk soal 4, ada satu revisi yaitu format 
