@@ -408,6 +408,10 @@ void scan_and_encrypt(const char *dirpath) {
      - Lalu dilakukan pengecekan, jika nama file merupakan direktori saat ini dan sebelumnya, maka fungsi akan ```continue```.
      - Setelah itu, dilakukan ```sprintf()``` untuk mendapatkan ```full_path``` agar bisa ke tahap selanjutnya.
      - Dilakukan pengecekan bahwa ```full_path``` merupakan direktori atau bukan. Jika merupakan directory, maka fungsi akan memanggil dirinya sendiri (fungsi rekursif). Sedangkan, jika bukan maka file akan dienskripsi.
+  
+  Untuk outputnya seperti ini
+  
+  ![Image](https://github.com/user-attachments/assets/926d70fc-7d46-4131-90e3-c2fe1f7fb0cc)
 
   ### c. Anak Fitur Kedua
   Anak fitur kedua bernama trojan.wrm. Caranya sama seperti anak fitur pertama, yaitu menggunakan fungsi. Untuk soal ini, diperlukan dua fungsi.
@@ -519,10 +523,6 @@ Penjelasan:
 - Setelah itu, ```*home``` akan mengambil data yaitu ```getenv("HOME")```.
 - Jika ```home``` tidak ada, maka ```home``` dideklarasikan dengan ```home = "/"```.
 - Jika ```home``` ada, maka fungsi menjalankan fungsi tertentu.
-
-Untuk outputnya seperti ini
-
-![Image](https://github.com/user-attachments/assets/926d70fc-7d46-4131-90e3-c2fe1f7fb0cc)
 
 ### e. Anak Fitur Ketiga (Untuk soal no 3e dan 3f)
 Untuk anak fitur ketiga (bernama rodok.exe), diperlukan beberapa fungsi, yaitu:
